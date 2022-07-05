@@ -1,29 +1,14 @@
 import { Request, Response, NextFunction } from 'express'
-import { IJwtPayload, JwtUtils } from '../utils/JwtUtils'
+import { JwtUtils } from '../utils/JwtUtils'
 
-export enum Tokens {
-    accessToken = 'accessToken',
-    refreshToken = 'refreshToken'
-}
-
-export const authHandler = (tokenType: string = Tokens.accessToken) => {
+export const authHandler = () => {
     return (req: Request, res: Response, next: NextFunction) => {
         const authHeader = req.headers.authorization
 
         if (authHeader) {
             const token = authHeader.split('')[1]
             try {
-                let jwtPayload: IJwtPayload
-
-                switch (tokenType) {
-                    case Tokens.accessToken:
-                    default:
-                        jwtPayload = JwtUtils.verifyAccessToken(token)
-                        break
-                    case Tokens.refreshToken:
-                        jwtPayload = JwtUtils.verifyRefreshToken(token)
-                        break
-                }
+                const jwtPayload = JwtUtils.verifyAccessToken(token)
 
                 req.payload = jwtPayload
 
