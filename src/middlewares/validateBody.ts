@@ -1,4 +1,4 @@
-import { ClassConstructor, plainToClass } from 'class-transformer'
+import { plainToClass } from 'class-transformer'
 import { validate } from 'class-validator'
 import { NextFunction, RequestHandler, Request, Response } from 'express'
 

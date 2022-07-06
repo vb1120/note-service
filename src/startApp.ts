@@ -2,8 +2,10 @@ import bodyParser from 'body-parser'
 import cors from 'cors'
 import express from 'express'
 import morgan from 'morgan'
-import { authHandler, errorHandler } from './middlewares'
+import { errorHandler } from './middlewares'
 import { AppRouter, envs } from './utils'
+import swaggerUi from 'swagger-ui-express'
+import swaggerDoc from './swagger.json'
 import './controllers/routes'
 
 const { port } = envs
@@ -12,6 +14,7 @@ export const startApp = () => {
     const app = express()
 
     app.use(cors())
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc))
     app.use(bodyParser.json())
     app.use(morgan('combined'))
 

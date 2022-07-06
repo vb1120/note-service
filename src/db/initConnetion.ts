@@ -4,6 +4,6 @@ import { Sequelize } from 'sequelize'
 export const initConnection = async (sequelize: Sequelize) => {
     await sequelize.authenticate()
     console.log('Database connection established successfully')
-    await sequelize.sync({ force: true })
+    await sequelize.sync({ alter: true })
     console.log('Models synchronized successfully')
 }

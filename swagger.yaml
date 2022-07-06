@@ -1,0 +1,270 @@
+openapi: 3.0.0
+info:
+  title: "Note App Note Service"
+  description: "API Documentation for notes service"
+  version: "1.0.0"
+
+servers:
+  - url: http://localhost:8081/
+    description: Local Development Server
+    
+components:
+  securitySchemes:
+    bearerAccess:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      
+  schemas:
+    Note:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 12
+          description: Auto generated on the server
+        description:
+          type: string
+          example: Recipe
+        content:
+          type: string
+          format: text
+          example: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        userUuid:
+          type: string
+          example: '123e4567-e89b-12d3-a456-426614174000'
+          description: Auto generated on the server
+        createdAt:
+          type: string
+          format: date-time
+          example: '2017-07-21T17:32:28Z'
+          description: Auto generated on the server
+        updatedAt:
+          type: string
+          format: date-time
+          example: '2017-07-21T17:32:28Z'
+          description: Auto generated on the server
+      required:
+        - description
+        - content
+
+    Unauthorized:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Unauthorization Message
+          example: 'Unauthorized'
+          
+    NotFound:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Entity Not Found 
+          example: 'Entity Not Found'
+          
+    BadRequest:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Bad Request Object
+          example: 'Malformed Request'
+    
+    ServerError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Internal Server Error
+          example: 'Internal Server Error'
+          
+tags:
+  - name: Notes
+    description: API endpoints for managing notes
+
+  
+paths:        
+  /notes:
+    get:
+      description: Returns the list of notes
+      tags: [Notes]
+      security:
+        - bearerAccess: []
+      responses:
+        200:
+          description: Notes returned sucessfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Note'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+    post:
+      description: Creates the new note
+      tags: [Notes]
+      security: 
+        - bearerAccess: []
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Note'
+      responses:
+        201:
+          description: Note created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Note'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        400:
+          description: Validation fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  
+  /notes/{noteId}:
+    get:
+      description: Returns the note by id
+      tags: [Notes]
+      security: 
+        - bearerAccess: []
+      parameters:
+        - in: path
+          name: noteId
+          schema:
+            type: integer
+          required: true
+          description: Unique id
+      responses:
+        200:
+          description: Note returned succesfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Note'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        404:
+          description: User Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'        
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+      
+    put:
+      description: Updates the note
+      tags: [Notes]
+      security: 
+        - bearerAccess: []
+      parameters:
+        - in: path
+          name: noteId
+          schema:
+            type: integer
+          required: true
+          description: Unique id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Note'
+      responses:
+        204:
+          description: User updated successfully
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        404:
+          description: User Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'  
+        400:
+          description: Validation fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+                
+    delete:
+      description: Deletes the note
+      tags: [Notes]
+      security: 
+        - bearerAccess: []
+      parameters:
+        - in: path
+          name: noteId
+          schema:
+            type: integer
+          required: true
+          description: Unique id
+      responses:
+        204:
+          description: Note deleted successfully
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        404:
+          description: User Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'  
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+                
