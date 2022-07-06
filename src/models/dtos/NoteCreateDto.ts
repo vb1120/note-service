@@ -14,7 +14,6 @@ export class NoteCreateDto {
     @Expose()
     content: InferAttributes<Note>['content']
 
-    @IsDefined()
     @IsUUID()
     @Expose()
     userUuid: InferAttributes<Note>['userUuid']

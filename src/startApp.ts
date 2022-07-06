@@ -3,7 +3,8 @@ import cors from 'cors'
 import express from 'express'
 import morgan from 'morgan'
 import { errorHandler } from './middlewares'
-import { envs } from './utils'
+import { AppRouter, envs } from './utils'
+import './controllers/routes'
 
 const { port } = envs
 
@@ -13,6 +14,8 @@ export const startApp = () => {
     app.use(cors())
     app.use(bodyParser.json())
     app.use(morgan('combined'))
+
+    app.use(AppRouter.getInstance())
 
     app.use(errorHandler)
 

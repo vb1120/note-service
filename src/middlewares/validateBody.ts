@@ -1,9 +1,10 @@
-import { plainToClass } from 'class-transformer'
+import { ClassConstructor, plainToClass } from 'class-transformer'
 import { validate } from 'class-validator'
 import { NextFunction, RequestHandler, Request, Response } from 'express'
 
 // This is validation pipe for req.body object
-export const validateBody = (dtoClass: typeof Object): RequestHandler => {
+// Todo: fix the dto argument type
+export const validateBody = (dtoClass: any): RequestHandler => {
     return function (req: Request, res: Response, next: NextFunction) {
         // Check if body exists
         if (!req.body) {

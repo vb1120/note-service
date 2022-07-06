@@ -1,14 +1,23 @@
 import { Request, Response, NextFunction } from 'express'
-import { JwtUtils } from '../utils/JwtUtils'
+import jwt from 'jsonwebtoken'
+import { envs } from '../utils'
+export interface IJwtPayload {
+    uuid: string
+    email: string
+}
 
 export const authHandler = () => {
     return (req: Request, res: Response, next: NextFunction) => {
         const authHeader = req.headers.authorization
 
         if (authHeader) {
-            const token = authHeader.split('')[1]
+            const token = authHeader.split(' ')[1]
+
             try {
-                const jwtPayload = JwtUtils.verifyAccessToken(token)
+                const jwtPayload = jwt.verify(
+                    token,
+                    envs.jwtAccess
+                ) as IJwtPayload
 
                 req.payload = jwtPayload
 

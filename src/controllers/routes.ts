@@ -11,9 +11,9 @@ router.use(authHandler())
 router
     .route('/notes')
     .get(NoteController.getNotes)
-    .post(NoteController.createNote)
+    .post(validateBody(NoteCreateDto), NoteController.createNote)
 router
     .route('/notes/:noteId')
     .get(NoteController.getNoteById)
-    .put(NoteController.updateNoteById)
+    .put(validateBody(NoteUpdateDto), NoteController.updateNoteById)
     .delete(NoteController.deleteNoteById)
